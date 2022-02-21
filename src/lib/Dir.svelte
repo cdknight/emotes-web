@@ -76,6 +76,10 @@
                 margin-left: 10px;
             }
         }
+        .dir-detail-owners {
+            display: flex;
+            flex-direction: column;
+        }
         .emote-link {
             text-decoration: none;
         }
