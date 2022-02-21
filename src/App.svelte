@@ -1,5 +1,4 @@
 <script lang="ts">
- import logo from './assets/svelte.png'
  import Login from './lib/Login.svelte'
  import Dir from './lib/Dir.svelte'
  import User from './lib/User.svelte'

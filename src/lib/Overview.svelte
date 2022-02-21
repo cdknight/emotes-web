@@ -46,6 +46,13 @@
         }
     `);
 
+    function visibleDirs() {
+        if ($tokenUser.data.tokenUser.administrator) {
+            return dirs.data.allDirs;
+        }
+        return dirs.data.tokenUser.dirs;
+    }
+
     query(tokenUser);
 
     // while (tokenUser.fetching) { console.log('waiting') }
@@ -66,7 +73,7 @@
                 <p>loading dirs</p>
             {:else}
                 <div class="dir-listing">
-                    {#each dirs.data.allDirs as dir}
+                    {#each visibleDirs() as dir}
                         <a href="/dir/{ dir.uuid }" use:link>
                             {dir.slug}
                         </a>
