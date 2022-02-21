@@ -93,6 +93,18 @@ mutation($uuid: UUID!) {
  .emote-images-listing {
      display: flex;
      align-items: baseline;
+
+     @media(max-width: 560px) {
+     	flex-direction: column;
+	& > * {
+        	 margin-left: 0rem !important;
+	}
+        & > :not(:last-child) {
+        	 margin-bottom: 0.5rem;
+        }
+
+     }
+
      & > :not(:first-child) {
          margin-left: 0.5rem;
      }

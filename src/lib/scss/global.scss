@@ -72,6 +72,14 @@
      select {
        width: 19%
      }
+     @media (max-width: 560px) {
+	  input[type="submit"], select {
+		  width: 99% !important;
+	  }
+	  input {
+		  width: 96% !important;
+	  }
+     }
 
      label {
        margin-bottom: 10px;
@@ -79,18 +87,26 @@
      display: flex;
      flex-direction: column;
      margin-bottom: 10px;
+
  }
 
   .delete-resource {
       border-color: darkred;
       color: darkred;
       width: 19%;
+
+     @media (max-width: 560px) {
+	     width: 99%;
+     }
   }
 
   .add-resource {
       border-color: green;
       color: green;
       width: 19%;
+      @media (max-width: 560px) {
+	     width: 99%;
+      }
   }
 
   .vbox {
