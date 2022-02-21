@@ -3,81 +3,63 @@
  import Login from './lib/Login.svelte'
  import Dir from './lib/Dir.svelte'
  import User from './lib/User.svelte'
+ import Emote from './lib/Emote.svelte'
  import Overview from './lib/Overview.svelte'
+ import Navbar from './lib/Navbar.svelte'
+
  import Router from 'svelte-spa-router'
- import { initClient, getClient } from '@urql/svelte';
+ import { replace } from 'svelte-spa-router'
+
+ import wrap from 'svelte-spa-router/wrap'
+ import { initClient, getClient, query, operationStore } from '@urql/svelte';
  import { multipartFetchExchange } from '@urql/exchange-multipart-fetch';
+ import { setContext } from 'svelte';
+ function checkUser() {
+     if (!localStorage.domain && !localStorage.token) {
+         return false;
+     }
+     return true;
+ }
+ function makeClient(ev) {
+     console.log("this was called")
+ }
+ function redirectLogin(ev) {
+     replace('/login');
+ }
+ async function getTokenUser() {
+
+ }
   const routes = {
       '/login': Login,
-      '/user/:uuid': User,
-      '/dir/:uuid': Dir,
-      '/': Overview,
+      '/user/:uuid': wrap({ component: User, conditions: [checkUser] }),
+      '/emote/:uuid': wrap({ component: Emote, conditions: [checkUser] }),
+      '/dir/:uuid': wrap({ component: Dir, conditions: [checkUser] }),
+      '/': wrap({ component: Overview, conditions: [checkUser] }),
   }
 
-    if (!getClient()) {
-        if (!localStorage.domain && !localStorage.token) {
-            replace("/login")
-        }
-        else {
-            const client = initClient({
-                url: new URL('/api', localStorage.domain).href,
-                fetchOptions: () => {
-                    return {
-                        headers: {
-                            Token: localStorage.token
-                        }
-                    };
-                },
-                exchanges: [multipartFetchExchange],
-            });
-        }
-    }
+ if (!getClient() && checkUser()) {
+          let apiHref = new URL('/api', localStorage.domain).href
+          console.log(apiHref)
+          const client = initClient({
+              url: apiHref,
+              fetchOptions: () => {
+                  return {
+                      headers: {
+                          Token: localStorage.token
+                      }
+                  };
+              },
+              exchanges: [multipartFetchExchange],
+          });
+   }
+
+
 </script>
 
 <main>
-    <Router {routes} />
+    <Navbar />
+    <Router {routes} on:conditionsFailed={redirectLogin} on:routeLoaded={makeClient}/>
 </main>
 
-<style>
-  :root {
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen,
-      Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  }
-
-  main {
-    text-align: center;
-    padding: 1em;
-    margin: 0 auto;
-  }
-
-  img {
-    height: 16rem;
-    width: 16rem;
-  }
-
-  h1 {
-    color: #ff3e00;
-    text-transform: uppercase;
-    font-size: 4rem;
-    font-weight: 100;
-    line-height: 1.1;
-    margin: 2rem auto;
-    max-width: 14rem;
-  }
-
-  p {
-    max-width: 14rem;
-    margin: 1rem auto;
-    line-height: 1.35;
-  }
-
-  @media (min-width: 480px) {
-    h1 {
-      max-width: none;
-    }
-
-    p {
-      max-width: none;
-    }
-  }
+<style lang="scss">
 </style>

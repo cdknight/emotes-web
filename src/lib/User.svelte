@@ -48,7 +48,6 @@
     .user-detail {
         .user-detail-header {
             display: flex;
-            justify-content: center;
             align-items: center;
 
             code { // not first child?

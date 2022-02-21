@@ -4,6 +4,8 @@
 
 
     export let passedDir;
+    export let dirQuery; // to rexecute the uploaded emotes
+
     console.log("passedDir is " + passedDir);
     let emoteName = '';
     let emoteDirectory = '';
@@ -29,7 +31,7 @@
             }
         }`});
 
-    function uploadEmote() {
+    async function uploadEmote() {
         console.log("uploading emote");
         console.log(emoteFile[0]);
         var opts = {
@@ -41,11 +43,14 @@
 
         console.log(emoteType)
         if (emoteType == "STANDARD") {
-            uploadEmoteMutationStandard(opts);
+            await uploadEmoteMutationStandard(opts);
         }
         else if (emoteType == "STICKER") {
-            uploadEmoteMutationSticker(opts);
+            await uploadEmoteMutationSticker(opts);
         }
+
+        window.location.reload(true);
+
     }
 
     // query(dirs);
@@ -80,3 +85,6 @@
         </div>
     </form>
 </div>
+
+<style lang="scss">
+</style>

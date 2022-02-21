@@ -9,7 +9,7 @@
         localStorage.domain = domain;
         localStorage.token = token;
 
-        push("/")
+        window.location.href = "/";
     }
 </script>
 
@@ -29,7 +29,4 @@
 </form>
 
 <style lang="scss">
- .emotes-form-group {
-     margin-bottom: 10px;
- }
 </style>

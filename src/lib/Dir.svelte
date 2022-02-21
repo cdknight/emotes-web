@@ -1,7 +1,7 @@
 
 
 <script>
-    import { initClient, getClient, operationStore, query } from '@urql/svelte';
+    import { initClient, getClient, operationStore, query, mutation } from '@urql/svelte';
     import { replace, link } from 'svelte-spa-router';
     import UploadEmote from './UploadEmote.svelte';
 
@@ -25,35 +25,43 @@
             }
         }`, { uuid: params.uuid });
 
+    const deleteDir = mutation({  query: `
+        mutation($uuid: UUID!) {
+            deleteDir(uuid: $uuid) }`});
+    function deleteDirectory() {
+        if (window.confirm("Are you sure?")) {
+            console.log(deleteDir({ uuid: params.uuid }));
+        }
+    }
+
     query(dir);
 </script>
 
 <div>
-    <h1>Directory </h1>
     {#if $dir.fetching}
         <p>loading dir</p>
     {:else if $dir.error}
         <p>error loading dir</p>
     {:else}
         <div class="dir-detail">
-            <div class="dir-detail-header">
-                <h3>Name: {$dir.data.dir.slug}
-                </h3>
+            <h1>Directory '{$dir.data.dir.slug}'</h1>
                 <code>uuid: {$dir.data.dir.uuid}</code>
-            </div>
-            <h4>Directory Owners</h4>
+            <h4>Owners</h4>
             <div class="dir-detail-owners">
                 {#each $dir.data.dir.users as user}
                     <a href="/user/{ user.uuid }" use:link>{ user.username }</a>
                 {/each}
             </div>
-            <h4>Directory Emotes</h4>
+            <h4>Emotes</h4>
             <div class="dir-detail-emotes">
                 {#each $dir.data.dir.emotes as emote}
-                    <img src="{ new URL("/" + $dir.data.dir.slug + "/" + emote.slug, client.url).href }">
+                    <a class="emote-link" href="/emote/{ emote.uuid }" use:link>
+                        <img src="{ new URL("/" + $dir.data.dir.slug + "/" + emote.slug, client.url).href }">
+                    </a>
                 {/each}
             </div>
-            <UploadEmote passedDir={$dir.data.dir.uuid} />
+            <UploadEmote passedDir={$dir.data.dir.uuid} dirQuery={$dir} />
+            <button class="delete-resource" on:click="{deleteDirectory}">Delete Directory</button>
         </div>
     {/if}
 </div>
@@ -62,12 +70,14 @@
     .dir-detail {
         .dir-detail-header {
             display: flex;
-            justify-content: center;
             align-items: center;
 
             code { // not first child?
                 margin-left: 10px;
             }
+        }
+        .emote-link {
+            text-decoration: none;
         }
     }
 </style>
