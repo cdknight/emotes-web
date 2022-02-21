@@ -6,7 +6,8 @@
      localStorage.token = '';
 
      console.log("login")
-     // window.location.href = "#/login"
+     window.location.href = "#/login"
+     window.location.reload(true);
  }
  function login() {
      //logout

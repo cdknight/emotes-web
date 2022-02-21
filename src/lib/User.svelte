@@ -35,7 +35,7 @@
                 <code>uuid: {$user.data.user.uuid}</code>
             </div>
             <h4>User Directories</h4>
-            <div class="user-detail-owners">
+            <div class="vbox user-detail-owners">
                 {#each $user.data.user.dirs as dir}
                     <a href="/dir/{ dir.uuid }" use:link>{ dir.slug }</a>
                 {/each}
